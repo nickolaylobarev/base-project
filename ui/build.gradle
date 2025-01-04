@@ -1,0 +1,15 @@
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':')
+
+    implementation 'com.codeborne:selenide:7.6.1'
+    implementation "io.qameta.allure:allure-selenide:$allureVersion"
+    testImplementation 'com.github.romankh3:image-comparison:4.4.0'
+}
+
+tasks.test {
+    systemProperty "env", System.getProperty("env", "prod")
+    systemProperty "browser", System.getProperty("browser", "chrome")
+}

@@ -1,0 +1,5 @@
+rootProject.name = 'base-project'
+include 'api'
+include 'postman-collections'
+include 'ui'
+

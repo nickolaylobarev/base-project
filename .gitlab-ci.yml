@@ -1,0 +1,60 @@
+# Gitlab CI/CD configuration
+# To run tests in the MAIN repository pipeline, either add a trigger mechanism to run tests from that repository,
+# or add a step to clone THIS repository and reuse that code in the MAIN repository configuration
+
+default:
+  tags:
+    - gitlabRunnerTag
+  cache:
+    key: "$CI_JOB_NAME"
+    paths:
+      - .gradle/
+
+stages:
+  - smoke
+  - api
+  - allure
+
+Smoke tests:
+  stage: smoke
+  allow_failure: true
+  script:
+    - chmod +x gradlew
+    - ./gradlew clean :api:test -PincludeTags="Smoke"
+  artifacts:
+    when: always
+    paths:
+      - .allure-results
+
+Integration Tests:
+  stage: api
+  allow_failure: true
+  script:
+    - chmod +x gradlew
+    - ./gradlew clean :api:test -PincludeTags="Integration" -PexcludeTags="Smoke"
+  artifacts:
+    when: always
+    paths:
+      - .allure-results
+
+E2E Tests:
+  stage: api
+  allow_failure: true
+  script:
+    - chmod +x gradlew
+    - ./gradlew clean :api:test -PincludeTags="E2E"
+  artifacts:
+    when: always
+    paths:
+      - .allure-results
+
+Allure report:
+  stage: allure
+  script:
+    - chmod +x gradlew
+    - ./gradlew :api:allureReport
+    - echo "Here is the Allure report - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
+  artifacts:
+    when: always
+    paths:
+      - build/reports/allure-report/allureReport/*
