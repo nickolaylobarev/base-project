@@ -1,0 +1,15 @@
+package models.booking;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BookingSuccessResponse {
+    private BookingId bookingid;
+    private Booking booking;
+}
